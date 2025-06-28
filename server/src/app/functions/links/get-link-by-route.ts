@@ -13,6 +13,7 @@ type GetLinkByRouteOutput = {
   link: {
     id: string
     route: string
+    displayUrl: string
     url: string
     createdAt: Date
   }
@@ -28,6 +29,7 @@ export async function getLinkByRoute(
       id: schema.links.id,
       route: schema.links.route,
       url: schema.links.url,
+      displayUrl: schema.links.displayUrl,
       createdAt: schema.links.createdAt,
     })
     .from(schema.links)

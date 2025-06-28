@@ -5,8 +5,6 @@ import { schema } from '@/infra/db/schemas'
 import { isLeft, isRight, unwrapEither } from '@/infra/shared/either'
 import { eq } from 'drizzle-orm'
 import { beforeAll, describe, expect, it, vi } from 'vitest'
-import { InvalidLink } from '../errors/invalid-link-format'
-import { uploadImage } from '../links/create-link'
 
 describe('', () => {
   beforeAll(() => {
@@ -15,7 +13,7 @@ describe('', () => {
         uploadFileToStorage: vi.fn().mockImplementation(() => {
           return {
             key: `${randomUUID()}.jpg`,
-            url: 'https://storage.com/image.jpg',
+            url: 'https://brevly-test-storage.com/image.jpg',
           }
         }),
       }
@@ -61,6 +59,6 @@ describe('', () => {
     // validation
     // assert
     expect(isLeft(sut)).toBe(true)
-    expect(unwrapEither(sut)).toBeInstanceOf(InvalidLink)
+    expect(unwrapEither(sut)).toBeInstanceOf(InvalidFileFormat)
   })
 })

@@ -9,7 +9,7 @@ import { env } from '@/env'
 import { Upload } from '@aws-sdk/lib-storage'
 
 const uploadFileToStorageInput = z.object({
-  folder: z.enum(['images', 'downloads']),
+  folder: z.enum(['reports']),
   fileName: z.string(),
   contentType: z.string(),
   contentStream: z.instanceof(Readable),
@@ -22,11 +22,7 @@ export async function uploadFileToStorage(input: UploadFileToStorageInput) {
     uploadFileToStorageInput.parse(input)
 
   const fileExtension = extname(fileName)
-  const fileNameWithoutExt = basename(fileName, fileExtension)
-  console.log('fileNameWithoutExt', fileNameWithoutExt)
-  const sanitizedFileName = fileNameWithoutExt.replaceAll(/[^a-zA-Z0-9]/g, '')
-
-  const uniqueFileName = `${folder}/${randomUUID()}-${sanitizedFileName}${fileExtension}`
+  const uniqueFileName = `${folder}/${randomUUID()}${fileExtension}`
 
   const upload = await new Upload({
     client: r2,

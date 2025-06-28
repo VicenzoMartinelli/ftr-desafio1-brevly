@@ -1,5 +1,5 @@
 import { getLinkByRoute } from '@/app/functions/links/get-link-by-route'
-import { incrementLinkHits } from '@/app/functions/links/incrementLinkHits'
+import { incrementLinkHits } from '@/app/functions/links/increment-link-hits'
 import { unwrapEither } from '@/infra/shared/either'
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
@@ -17,6 +17,7 @@ export const getLinkRoute: FastifyPluginAsyncZod = async server => {
         response: {
           200: z.object({
             id: z.string(),
+            displayUrl: z.string(),
             route: z.string(),
             url: z.string(),
             createdAt: z.date(),

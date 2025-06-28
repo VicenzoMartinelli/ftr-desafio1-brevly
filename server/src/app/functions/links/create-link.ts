@@ -6,6 +6,7 @@ import { PostgresError } from 'postgres'
 import { z } from 'zod'
 import { DuplicatedLink } from './errors/duplicated-link'
 import { InvalidLink } from './errors/invalid-link-format'
+import { env } from '@/env'
 
 const createLinkInput = z.object({
   route: z.string().regex(/^[a-zA-Z0-9-_~.]+$/, {
@@ -24,6 +25,7 @@ export async function createLink(
   if (parseResult.success === false) {
     return makeLeft(new InvalidLink())
   }
+  const domain = env.BASE_DOMAIN;
   const { route, url } = parseResult.data
 
   try {
@@ -32,6 +34,7 @@ export async function createLink(
       .values({
         route: route,
         url: url,
+        displayUrl: `https://${domain}/${route}`,
         hits: 0,
       })
       .returning({

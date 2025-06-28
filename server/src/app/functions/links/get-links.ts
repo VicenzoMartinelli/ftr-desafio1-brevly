@@ -17,6 +17,7 @@ type GetlinksOutput = {
   links: {
     id: string
     route: string
+    displayUrl: string
     url: string
     hits: number
     createdAt: Date
@@ -35,6 +36,7 @@ export async function getlinks(
       .select({
         id: schema.links.id,
         route: schema.links.route,
+        displayUrl: schema.links.displayUrl,
         url: schema.links.url,
         hits: schema.links.hits,
         createdAt: schema.links.createdAt,

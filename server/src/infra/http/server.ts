@@ -1,6 +1,5 @@
 import { fastifyCors } from '@fastify/cors'
 import fastifySwagger from '@fastify/swagger'
-import { fastifySwaggerUi } from '@fastify/swagger-ui'
 import ScalarApiReference from '@scalar/fastify-api-reference'
 import { fastify } from 'fastify'
 import {
@@ -14,6 +13,7 @@ import { createLinkRoute } from './routes/create-link'
 import { deleteLinkRoute } from './routes/delete-link'
 import { getLinkRoute } from './routes/get-link-by-route'
 import { getLinksRoute } from './routes/get-links'
+import { exportReportRoute } from './routes/export-report'
 
 const server = fastify()
   .setValidatorCompiler(validatorCompiler)
@@ -42,9 +42,6 @@ server.register(fastifySwagger, {
   },
   transform: jsonSchemaTransform,
 })
-// server.register(fastifySwaggerUi, {
-//   routePrefix: 'swagger',
-// })
 server.register(ScalarApiReference, {
   routePrefix: '/docs',
 })
@@ -54,6 +51,7 @@ server.register(createLinkRoute, { prefix: '/api/v1' })
 server.register(getLinksRoute, { prefix: '/api/v1' })
 server.register(getLinkRoute, { prefix: '/api/v1' })
 server.register(deleteLinkRoute, { prefix: '/api/v1' })
+server.register(exportReportRoute, { prefix: '/api/v1' })
 
 server
   .listen({
