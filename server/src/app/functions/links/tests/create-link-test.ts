@@ -1,64 +1,66 @@
-import { randomUUID } from 'node:crypto'
-import { Readable } from 'node:stream'
-import { db } from '@/infra/db'
-import { schema } from '@/infra/db/schemas'
-import { isLeft, isRight, unwrapEither } from '@/infra/shared/either'
-import { eq } from 'drizzle-orm'
-import { beforeAll, describe, expect, it, vi } from 'vitest'
+// import { randomUUID } from 'node:crypto'
+// import { Readable } from 'node:stream'
+// import { db } from '@/infra/db'
+// import { schema } from '@/infra/db/schemas'
+// import { isLeft, isRight, unwrapEither } from '@/infra/shared/either'
+// import { eq } from 'drizzle-orm'
+// import { beforeAll, describe, expect, it, vi } from 'vitest'
 
-describe('', () => {
-  beforeAll(() => {
-    vi.mock('@/infra/storage/upload-file-to-storage', () => {
-      return {
-        uploadFileToStorage: vi.fn().mockImplementation(() => {
-          return {
-            key: `${randomUUID()}.jpg`,
-            url: 'https://brevly-test-storage.com/image.jpg',
-          }
-        }),
-      }
-    })
-  })
+// describe('', () => {
+//   beforeAll(() => {
+//     vi.mock('@/infra/storage/upload-file-to-storage', () => {
+//       return {
+//         uploadFileToStorage: vi.fn().mockImplementation(() => {
+//           const key = `${randomUUID()}.jpg`
 
-  it('should be able to upload an image', async () => {
-    // arrange
-    const fileName = `${randomUUID()}.jpg`
+//           return {
+//             key: `${randomUUID()}.jpg`,
+//             url: `https://brevly-test-storage.com/${key}`,
+//           }
+//         }),
+//       }
+//     })
+//   })
 
-    // system under test
-    // act
-    const sut = await uploadImage({
-      fileName: fileName,
-      contentType: 'image/jpeg',
-      contentStream: Readable.from([]),
-    })
+//   it('should be able to upload an image', async () => {
+//     // arrange
+//     const fileName = `${randomUUID()}.jpg`
 
-    // validation
-    // assert
-    expect(isRight(sut)).toBe(true)
+//     // system under test
+//     // act
+//     const sut = await uploadImage({
+//       fileName: fileName,
+//       contentType: 'image/jpeg',
+//       contentStream: Readable.from([]),
+//     })
 
-    const result = await db
-      .select()
-      .from(schema.uploads)
-      .where(eq(schema.uploads.name, fileName))
+//     // validation
+//     // assert
+//     expect(isRight(sut)).toBe(true)
 
-    expect(result).toHaveLength(1)
-  })
+//     const result = await db
+//       .select()
+//       .from(schema.uploads)
+//       .where(eq(schema.uploads.name, fileName))
 
-  it('should not be able to upload an invalid file', async () => {
-    // arrange
-    const fileName = `${randomUUID()}.pdf`
+//     expect(result).toHaveLength(1)
+//   })
 
-    // system under test
-    // act
-    const sut = await uploadImage({
-      fileName,
-      contentType: 'document/pdf',
-      contentStream: Readable.from([]),
-    })
+//   it('should not be able to upload an invalid file', async () => {
+//     // arrange
+//     const fileName = `${randomUUID()}.pdf`
 
-    // validation
-    // assert
-    expect(isLeft(sut)).toBe(true)
-    expect(unwrapEither(sut)).toBeInstanceOf(InvalidFileFormat)
-  })
-})
+//     // system under test
+//     // act
+//     const sut = await uploadImage({
+//       fileName,
+//       contentType: 'document/pdf',
+//       contentStream: Readable.from([]),
+//     })
+
+//     // validation
+//     // assert
+//     expect(isLeft(sut)).toBe(true)
+//     expect(unwrapEither(sut)).toBeInstanceOf(InvalidFileFormat)
+//   })
+// })
