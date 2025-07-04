@@ -1,68 +1,80 @@
-# Descrição e Requisitos
+# Brevly Server
 
-Nesse projeto back-end, será desenvolvido uma API para gerenciar o encurtamento de URL’s. 
+Este projeto é um servidor backend para encurtamento de URLs, gerenciamento de links e exportação de relatórios, utilizando Node.js, Fastify, Drizzle ORM e integração com Cloudflare R2 para armazenamento.
 
-## Funcionalidades e Regras
-- []  Deve ser possível criar um link
-    - [ ]  Não deve ser possível criar um link com URL encurtada mal formatada
-    - [ ]  Não deve ser possível criar um link com URL encurtada já existente
-- [ ]  Deve ser possível deletar um link
-- [ ]  Deve ser possível obter a URL original por meio de uma URL encurtada
-- [ ]  Deve ser possível listar todas as URL’s cadastradas
-- [ ]  Deve ser possível incrementar a quantidade de acessos de um link
-- [ ]  Deve ser possível exportar os links criados em um CSV
-    - [ ]  Deve ser possível acessar o CSV por meio de uma CDN (Amazon S3, Cloudflare R2, etc)
-    - [ ]  Deve ser gerado um nome aleatório e único para o arquivo
-    - [ ]  Deve ser possível realizar a listagem de forma performática
-    - [ ]  O CSV deve ter campos como, URL original, URL encurtada, contagem de acessos e data de criação.
+## Sumário
 
-<aside>
-💡
-
-Dica: Copie os checkbox acima para o README do seu projeto.
-Assim irá poder ir marcando na medida que implementar as funcionalidades. 😉
-
-</aside>
-
+- [Requisitos](#requisitos)
+- [Configuração do Ambiente](#configuração-do-ambiente)
+- [Instalação](#instalação)
+- [Comandos Principais](#comandos-principais)
+- [Documentação da API (Scalar)](#documentação-da-api-scalar)
+- [Estrutura do Projeto](#estrutura-do-projeto)
 ---
 
-Veja que não especificamos se nas funcionalidades de deletar ou incrementar acessos, deve ser utilizado um campo `id` ou URL encurtada para realizar tais operações. Essa é uma decisão que cabe a você, desenvolvedor, escolher. Não há certo ou errado aqui, mas o recomendado é manter um padrão, se escolher `id`, que seja em ambas. Consistência e padrão são importantes.
+## Requisitos
 
-*Lembrando que essa escolha irá impactar também no front-end.*
+- Node.js
+- pnpm
+- Docker (para banco de dados local)
 
-## Ferramentas
+## Configuração do Ambiente
 
-É obrigatório o uso de:
+1. Copie o arquivo `.env` como base para suas variáveis de ambiente locais e crie um .env.local:
+   ```sh
+   cp .env .env.local
+   ```
+2. Ajuste as variáveis conforme necessário, especialmente as credenciais do banco de dados e Cloudflare R2.
 
-- TypeScript
-- Fastify
-- Drizzle
-- Postgres
+3. Suba o banco de dados local com Docker:
+   ```sh
+   docker-compose up -d
+   ```
 
-## Variáveis ambiente
+## Instalação
 
-Todo projeto tem diversas configurações de variáveis que devem ser diferentes de acordo com o ambiente que ele é executado. Para isso, importante sabermos, de forma fácil e intuitiva, quais variáveis são essas. Então é obrigatório que esse projeto tenha um arquivo `.env.example` com as chaves necessárias.
+Instale as dependências do projeto:
+
+```sh
+pnpm install
+```
+
+## Comandos Principais
+
+- **Iniciar em modo desenvolvimento:**
+  ```sh
+  pnpm dev
+  ```
+- **Gerar e rodar migrações do banco:**
+  ```sh
+  pnpm db:generate
+  pnpm db:migrate
+  ```
+- **Build de produção:**
+  ```sh
+  pnpm build
+  ```
+
+## Documentação da API (Scalar)
+
+A documentação interativa da API está disponível via Scalar, integrada ao servidor Fastify.
+
+- Após iniciar o servidor, acesse: [http://localhost:3333/docs](http://localhost:3333/docs)
+
+A documentação é gerada automaticamente a partir dos schemas e rotas do projeto, facilitando a exploração e testes dos endpoints.
+
+## Estrutura do Projeto
 
 ```
-PORT=
-DATABASE_URL=
-
-CLOUDFLARE_ACCOUNT_ID=""
-CLOUDFLARE_ACCESS_KEY_ID=""
-CLOUDFLARE_SECRET_ACCESS_KEY=""
-CLOUDFLARE_BUCKET=""
-CLOUDFLARE_PUBLIC_URL=""
+src/
+  app/                # Lógica de negócio e funções principais
+  infra/
+    db/               # Configuração e migrações do banco de dados
+    http/             # Servidor Fastify e rotas HTTP
+    storage/          # Integração com Cloudflare R2
+  shared/             # Utilitários e helpers
+.env, [`.env.local`](.env.local )      # Variáveis de ambiente
+docker/               # Scripts para banco de dados local
 ```
 
-## Scripts
-
-Crie um script com a exata chave `db:migrate` responsável por executar as migrations do banco de dados.
-
-## Docker
-
-Para esse projeto back-end você deve construir um `Dockerfile`, seguindo as boas práticas, que deve ser responsável por gerar a imagem da aplicação.
-
-## Dicas
-
-- Não se esqueça de habilitar o CORS na aplicação.
-- Em caso de dúvidas, utilize o espaço da comunidade e do nosso fórum para interagir com outros alunos/instrutores e encontrar uma solução que funcione para você.
+---

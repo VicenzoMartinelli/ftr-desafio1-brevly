@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "brev.ly-server",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,9 +11,8 @@
     "db:migrate": "dotenv -e .env.local -- drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
     "db:migrate:test": "dotenv -e .env.test -- drizzle-kit migrate",
-    "pretest": "pnpm run db:migrate:test",
-    "pretest:watch": "pnpm run db:migrate:test",
-    "build": "tsup-node"
+    "build": "tsup src --format esm",
+    "start": "node dist/server.mjs"
   },
   "keywords": [],
   "author": "",

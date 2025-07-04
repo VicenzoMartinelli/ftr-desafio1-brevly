@@ -44,3 +44,12 @@
 	--color-gray-500: #4d505c;
 	--color-gray-600: #1f2025;
 }
+
+.theme-overflow::-webkit-scrollbar {
+	width: 6px;
+}
+
+.theme-overflow::-webkit-scrollbar-thumb {
+	background: var(--color-primary);
+	border-radius: 12px;
+}
