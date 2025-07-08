@@ -11,9 +11,9 @@ import {
 } from 'fastify-type-provider-zod'
 import { createLinkRoute } from './routes/create-link'
 import { deleteLinkRoute } from './routes/delete-link'
+import { exportReportRoute } from './routes/export-report'
 import { getLinkRoute } from './routes/get-link-by-route'
 import { getLinksRoute } from './routes/get-links'
-import { exportReportRoute } from './routes/export-report'
 
 const server = fastify()
   .setValidatorCompiler(validatorCompiler)
@@ -56,6 +56,7 @@ server.register(exportReportRoute, { prefix: '/api/v1' })
 server
   .listen({
     port: 3333,
+    host: '0.0.0.0',
   })
   .then(() => {
     console.log('running')
