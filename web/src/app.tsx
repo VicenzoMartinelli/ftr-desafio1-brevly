@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router';
 import Home from './pages/home';
-import Redirecting from './pages/redirecting';
 import NotFound from './pages/not-found';
+import Redirecting from './pages/redirecting';
 
 export function App() {
 	return (
@@ -11,6 +11,7 @@ export function App() {
 
 				<Route path="/home" element={<Home />} />
 				<Route path=":route" element={<Redirecting />} />
+				<Route path="/not-found" element={<NotFound />} />
 
 				<Route path="*" element={<NotFound />} />
 			</Routes>

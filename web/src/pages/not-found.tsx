@@ -1,9 +1,6 @@
-import { useParams } from 'react-router';
 import logo404 from '@/assets/404.png';
 
 export default function NotFound() {
-	let { route } = useParams();
-
 	return (
 		<div className="flex flex-col w-full md:w-[30%] m-auto">
 			<div className="flex flex-col gap-5 bg-white p-8 rounded-lg shadow-xs items-center justify-center">

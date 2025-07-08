@@ -1,9 +1,38 @@
-import { useParams } from 'react-router';
-
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
 import logo from '@/assets/logo_icon.png';
+import { visitLinkByRoute } from '@/http/link-endpoints';
+import type { LinkModel } from '@/store/app-links-store';
 
 export default function Redirecting() {
-	let { route } = useParams();
+	const navigate = useNavigate();
+	const { route } = useParams();
+
+	const [url, setUrl] = useState('');
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		async function visit() {
+			if (!route) return;
+
+			const response = await visitLinkByRoute(route);
+
+			if (!response.ok) {
+				navigate('/not-found');
+				return;
+			}
+
+			const data: LinkModel = await response.json();
+
+			setTimeout(() => {
+				location.href = data.url;
+			}, 2000);
+
+			setUrl(data.url);
+		}
+
+		visit();
+	}, []);
 
 	return (
 		<div className="flex flex-col w-full md:w-[30%] m-auto">
@@ -22,7 +51,7 @@ export default function Redirecting() {
 						<a
 							className="text-primary"
 							target="_blank"
-							href={`https://google.com`}
+							href={url}
 							rel="noopener"
 						>
 							Acesse aqui

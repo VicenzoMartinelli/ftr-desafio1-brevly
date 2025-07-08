@@ -14,14 +14,22 @@ export default function LinkForm() {
 		handleSubmit,
 		formState: { errors },
 		reset,
+		setError,
 	} = useForm<FormData>();
 
 	const onSubmit = async (data: FormData) => {
-		await addLink({
-			route: data.route,
-			url: data.url,
-		});
-		reset();
+		try {
+			await addLink({
+				route: data.route,
+				url: data.url,
+			});
+
+			reset();
+		} catch (err) {
+			setError('url', {
+				message: err instanceof Error ? err.message : 'Ocorreu um erro.',
+			});
+		}
 	};
 
 	return (
@@ -37,17 +45,17 @@ export default function LinkForm() {
 						id="url"
 						type="url"
 						{...register('url', {
-							required: '',
+							required: 'Informe uma url válida.',
 							pattern: {
 								value: /^https?:\/\/.+/,
-								message: '',
+								message: 'Informe uma url válida.',
 							},
 						})}
 						placeholder="https://examplo.com"
 						className="border border-gray-300 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-600"
 					/>
 					{errors.url && (
-						<p className="text-xs text-red-400">Informe uma url válida.</p>
+						<p className="text-xs text-red-400">{errors.url.message}</p>
 					)}
 				</div>
 
@@ -60,10 +68,12 @@ export default function LinkForm() {
 						<input
 							id="route"
 							{...register('route', {
-								required: '',
+								required:
+									'Informe uma url minúscula e sem espaço/caracter especial.',
 								pattern: {
 									value: /^[a-zA-Z0-9\-_\/]*$/,
-									message: '',
+									message:
+										'Informe uma url minúscula e sem espaço/caracter especial.',
 								},
 							})}
 							type="text"
@@ -72,9 +82,7 @@ export default function LinkForm() {
 						/>
 					</div>
 					{errors.route && (
-						<p className="text-xs text-red-400">
-							Informe uma url minúscula e sem espaço/caracter especial.
-						</p>
+						<p className="text-xs text-red-400">{errors.route.message}</p>
 					)}
 				</div>
 

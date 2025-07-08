@@ -45,7 +45,10 @@ server.register(fastifySwagger, {
 server.register(ScalarApiReference, {
   routePrefix: '/docs',
 })
-server.register(fastifyCors, { origin: '*' })
+server.register(fastifyCors, {
+  origin: '*',
+  methods: '*',
+})
 
 server.register(createLinkRoute, { prefix: '/api/v1' })
 server.register(getLinksRoute, { prefix: '/api/v1' })

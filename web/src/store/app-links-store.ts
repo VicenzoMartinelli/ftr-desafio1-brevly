@@ -26,8 +26,8 @@ type LinkStoreState = {
 	status: 'progress' | 'success' | 'error';
 	loadLinks: () => void;
 	addLink: (input: createLinkInput) => Promise<void>;
-	deleteLink: (route: string) => void;
-	visitLink: (route: string) => void;
+	deleteLink: (route: string) => Promise<void>;
+	incrementHits: (route: string) => Promise<void>;
 };
 
 enableMapSet();
@@ -50,19 +50,14 @@ export const useLinksStore = create<LinkStoreState, [['zustand/immer', never]]>(
 		}
 
 		async function addLink(input: createLinkInput) {
-			try {
-				const result = await postNewLink({
-					route: input.route,
-					url: input.url,
-				});
+			const result = await postNewLink({
+				route: input.route,
+				url: input.url,
+			});
 
-				console.log('Link added successfully: ' + result);
+			if (result === 400) throw new Error('Essa rota já foi cadastrada.');
 
-				await loadLinks();
-				console.log('LoadLinks executado');
-			} catch (error) {
-				console.error('Erro em addLink:', error); // ← Vai mostrar o erro
-			}
+			await loadLinks();
 		}
 
 		async function deleteLink(route: string) {
@@ -70,9 +65,27 @@ export const useLinksStore = create<LinkStoreState, [['zustand/immer', never]]>(
 
 			if (!findedLink) return;
 
-			await deleteLinkByRoute(route);
+			const resultStatusCode = await deleteLinkByRoute(route);
+
+			if (resultStatusCode === 204) {
+				set((state) => {
+					state.links.delete(route);
+				});
+			}
 		}
-		async function visitLink(route: string) {}
+
+		async function incrementHits(route: string) {
+			const findedLink = get().links.get(route);
+
+			if (!findedLink) return;
+
+			findedLink.hits++;
+
+			set((state) => {
+				state.links.delete(route);
+				state.links.set(route, findedLink);
+			});
+		}
 
 		return {
 			links: new Map(),
@@ -80,7 +93,7 @@ export const useLinksStore = create<LinkStoreState, [['zustand/immer', never]]>(
 			loadLinks,
 			addLink,
 			deleteLink,
-			visitLink,
+			incrementHits,
 		};
 	}),
 );

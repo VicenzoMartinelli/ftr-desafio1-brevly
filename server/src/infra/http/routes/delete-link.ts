@@ -14,7 +14,7 @@ export const deleteLinkRoute: FastifyPluginAsyncZod = async server => {
         }),
         tags: ['links'],
         response: {
-          200: z.object({}),
+          204: z.null(),
           404: z.object({
             message: z.string(),
           }),
@@ -32,7 +32,7 @@ export const deleteLinkRoute: FastifyPluginAsyncZod = async server => {
         return reply.status(404).send({ message: unwrapedResult.message })
       }
 
-      return reply.status(204).send({})
+      return reply.status(204).send()
     }
   )
 }
