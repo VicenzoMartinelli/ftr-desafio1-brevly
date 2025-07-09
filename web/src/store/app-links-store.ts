@@ -23,7 +23,7 @@ export interface createLinkInput {
 
 type LinkStoreState = {
 	links: Map<string, LinkModel>;
-	status: 'progress' | 'success' | 'error';
+	status: 'idle' | 'progress' | 'success' | 'error';
 	loadLinks: () => void;
 	addLink: (input: createLinkInput) => Promise<void>;
 	deleteLink: (route: string) => Promise<void>;
@@ -106,7 +106,7 @@ export const useLinksData = () => {
 				status: store.status,
 				isLoading: store.status === 'progress',
 				isError: store.status === 'error',
-				isSuccess: store.status === 'success',
+				isSuccess: store.status === 'idle' || 'success',
 			};
 		}),
 	);
